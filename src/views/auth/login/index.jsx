@@ -9,8 +9,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useSession } from "./../../../providers/session";
+import { client } from "../../../config/environment";
 
 const Login = () => {
+  const { setIsLogged } = useSession();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    try {
+      await client.post("/login", {
+        emailUsername: data.get("email"),
+        password: data.get("password"),
+        expires: false,
+      });
+      setIsLogged(true);
+    } catch (error) {}
+  };
+
   return (
     <Box>
       <Container component='main' maxWidth='xs'>
