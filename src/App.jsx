@@ -1,29 +1,30 @@
+import { CssBaseline } from "@mui/material";
 import React, { useState } from "react";
-import Login from "./views/auth/login";
+import { Navigate, Route, Routes } from "react-router-dom";
+import MainLayout from "./layouts/main";
+import { useSession } from "./providers/session";
+import Auth from "./views/auth";
+import Dashboard from "./views/dashboard";
+import Users from "./views/users";
 
 const App = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const { isLogged, token } = useSession();
 
-  if (!isLogged) {
-    return <Login />;
-  }
+  // if (!isLogged) {
+  //   return <Auth />;
+  // }
+
+  //if (!token) return <h1>Loading</h1>;
 
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainLayout>
+      <CssBaseline />
+      <Routes>
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/users' element={<Users />} />
+        <Route path='*' element={<Navigate to='/dashboard' />} />
+      </Routes>
+    </MainLayout>
   );
 };
 

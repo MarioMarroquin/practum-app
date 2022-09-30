@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -11,23 +11,36 @@ import {
 } from "@mui/material";
 import { useSession } from "./../../../providers/session";
 import { client } from "../../../config/environment";
+import { accessToken } from "../../../config/environment";
+import cookies from "react-cookies";
 
 const Login = () => {
-  const { setIsLogged } = useSession();
+  const { setIsLogged, setToken } = useSession();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     try {
-      await client.post("/login", {
-        emailUsername: data.get("email"),
+      await client.post("auth/login", {
+        email: data.get("email"),
         password: data.get("password"),
-        expires: false,
       });
       setIsLogged(true);
-    } catch (error) {}
+      console.log("cookiesload", document.cookie);
+      setToken(cookies.load("Authorization"));
+      accessToken.set(cookies.load("authorization"));
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.jsx ~ line 29 ~ handleSubmit ~ error",
+        error
+      );
+    }
   };
+
+  useEffect(() => {
+    console.log("cookiesload", document.cookie);
+  }, []);
 
   return (
     <Box>
@@ -36,7 +49,7 @@ const Login = () => {
           <Paper elevation={24} sx={{ p: 2, borderRadius: "0.5rem" }}>
             <Box
               sx={{
-                backgroundColor: "gray",
+                backgroundColor: "#566573",
                 borderRadius: "0.5rem",
                 marginTop: -5,
                 color: "white",
@@ -45,15 +58,15 @@ const Login = () => {
               }}
             >
               <Typography align='center' variant='h4' gutterBottom>
-                <b>Log In</b>
+                <b>Iniciar Sesión</b>
               </Typography>
               <Typography align='center' gutterBottom>
-                Introduce tus datos para iniciar sesión
+                Introduce tus credenciales
               </Typography>
             </Box>
             <Box
               component='form'
-              onSubmit={null}
+              onSubmit={handleSubmit}
               mt={1}
               sx={{
                 display: "flex",
@@ -80,10 +93,6 @@ const Login = () => {
                 label='Password'
                 type='password'
                 id='password'
-              />
-              <FormControlLabel
-                control={<Checkbox value='remember' color='primary' />}
-                label='Recordar usuario'
               />
               <Button
                 type='submit'

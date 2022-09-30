@@ -8,7 +8,7 @@ const sessionContext = createContext({});
 
 const SessionProvider = ({ children }) => {
   const [token, setToken] = useState(accessToken.get());
-  const [isLogged, setIsLogged] = useState(!!cookies.load("session"));
+  const [isLogged, setIsLogged] = useState(!!cookies.load("authorization"));
   const { overallRole, firstName } = useMemo(
     () => (token ? jwt.decode(token) : {}),
     [token]
@@ -27,28 +27,6 @@ const SessionProvider = ({ children }) => {
     localStorage.setItem("logout", Date.now()); // Force logout on every tab
   };
 
-  const getAccessToken = async () => {
-    try {
-      if (isLogged) {
-        const { data } = await client.get("/access");
-
-        accessToken.set(data.accessToken);
-        setToken(data.accessToken);
-      }
-    } catch (err) {
-      logout();
-    }
-  };
-
-  useInterval(
-    getAccessToken,
-    1000 * 60 * 10, // 10 Minutes (5 mins less than access expiration)
-    {
-      skip: !isLogged,
-      leading: true,
-    }
-  );
-
   useEffect(() => {
     // Listen when other tab logs out so every single tab returns to login
     const logoutListener = async (event) => {
@@ -58,10 +36,6 @@ const SessionProvider = ({ children }) => {
     return () => window.removeEventListener("storage", logoutListener);
   });
 
-  const reloadUser = async () => {
-    await getAccessToken();
-  };
-
   return (
     <sessionContext.Provider
       value={{
@@ -69,7 +43,7 @@ const SessionProvider = ({ children }) => {
         setIsLogged,
         token,
         logout,
-        reloadUser,
+        setToken,
       }}
     >
       {children}
