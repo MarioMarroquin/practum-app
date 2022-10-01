@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import { Backdrop, CircularProgress, CssBaseline } from "@mui/material";
 import React, { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/main";
@@ -8,13 +8,19 @@ import Dashboard from "./views/dashboard";
 import Users from "./views/users";
 
 const App = () => {
-  const { isLogged } = useSession();
+  const { isLogged, loading } = useSession();
+
+  if (loading) {
+    return (
+      <Backdrop open={loading} sx={{ zIndex: 1500 }}>
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
   if (!isLogged) {
     return <Auth />;
   }
-
-  //if (!token) return <h1>Loading</h1>;
 
   return (
     <MainLayout>

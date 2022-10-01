@@ -109,7 +109,7 @@ const MainLayout = ({ children }) => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Project Management
+            Practum Process Manager
           </Typography>
           <IconButton onClick={logout}>
             <Logout color='secondary' />
