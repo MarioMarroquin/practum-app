@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { client } from "../../../config/environment";
-import { useSession } from "./../../../providers/session";
+import { useSession } from "../../../providers/session";
 
 const Login = () => {
   const { setIsLogged } = useSession();
