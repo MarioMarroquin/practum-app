@@ -1,3 +1,4 @@
+import { useReactTable } from "@tanstack/react-table";
 import React from "react";
 
 const Dashboard = () => {

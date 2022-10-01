@@ -1,21 +1,17 @@
-import React, { useEffect } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   Container,
-  FormControlLabel,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import { useSession } from "./../../../providers/session";
+import React from "react";
 import { client } from "../../../config/environment";
-import { accessToken } from "../../../config/environment";
-import cookies from "react-cookies";
+import { useSession } from "./../../../providers/session";
 
 const Login = () => {
-  const { setIsLogged, setToken } = useSession();
+  const { setIsLogged } = useSession();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,9 +23,6 @@ const Login = () => {
         password: data.get("password"),
       });
       setIsLogged(true);
-      console.log("cookiesload", document.cookie);
-      setToken(cookies.load("Authorization"));
-      accessToken.set(cookies.load("authorization"));
     } catch (error) {
       console.log(
         "🚀 ~ file: index.jsx ~ line 29 ~ handleSubmit ~ error",
@@ -37,10 +30,6 @@ const Login = () => {
       );
     }
   };
-
-  useEffect(() => {
-    console.log("cookiesload", document.cookie);
-  }, []);
 
   return (
     <Box>

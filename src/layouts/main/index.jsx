@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSession } from "../../providers/session";
 
 const drawerWidth = 240;
@@ -66,6 +66,7 @@ const LeftDrawer = styled(Drawer, {
 }));
 
 const MainLayout = ({ children }) => {
+  const [selected, setSelected] = useState("Dashboard");
   const { user, logout } = useSession();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [open, setOpen] = useState(false);
@@ -74,6 +75,7 @@ const MainLayout = ({ children }) => {
   };
 
   let navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -131,6 +133,7 @@ const MainLayout = ({ children }) => {
         <Divider />
         <List component='nav'>
           <ListItemButton
+            selected={"/dashboard" === pathname}
             onClick={() => {
               navigate("/dashboard");
             }}
@@ -141,6 +144,7 @@ const MainLayout = ({ children }) => {
             <ListItemText primary='Dashboard' />
           </ListItemButton>
           <ListItemButton
+            selected={"/users" === pathname}
             onClick={() => {
               navigate("/users");
             }}

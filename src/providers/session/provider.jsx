@@ -1,49 +1,43 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import jwt from "jsonwebtoken";
-import { client, accessToken } from "./../../config/environment";
-import cookies from "react-cookies";
-import useInterval from "./../../hooks/use-interval";
+import React, { createContext, useEffect, useState } from "react";
+import { client } from "./../../config/environment";
 
 const sessionContext = createContext({});
 
 const SessionProvider = ({ children }) => {
-  const [token, setToken] = useState(accessToken.get());
-  const [isLogged, setIsLogged] = useState(!!cookies.load("authorization"));
-  const { overallRole, firstName } = useMemo(
-    () => (token ? jwt.decode(token) : {}),
-    [token]
-  );
+  const [isLogged, setIsLogged] = useState();
+  const [user, setUser] = useState();
 
   const logoutWindow = async () => {
-    setToken();
     setIsLogged(false);
-    accessToken.set();
   };
 
   const logout = async () => {
     logoutWindow();
-    await client.post("/logout");
+    await client.post("auth/logout");
     localStorage.clear();
     localStorage.setItem("logout", Date.now()); // Force logout on every tab
   };
 
   useEffect(() => {
-    // Listen when other tab logs out so every single tab returns to login
-    const logoutListener = async (event) => {
-      if (event.key === "logout") logoutWindow();
+    const fetchSession = async () => {
+      await client.get("auth").then((res) => {
+        const data = res?.data?.data?.data;
+        const authentication = res?.data?.data?.authenticated;
+        setIsLogged(authentication);
+        setUser(data);
+      });
     };
-    window.addEventListener("storage", logoutListener);
-    return () => window.removeEventListener("storage", logoutListener);
-  });
+
+    fetchSession().catch(console.error);
+  }, []);
 
   return (
     <sessionContext.Provider
       value={{
         isLogged,
         setIsLogged,
-        token,
+        user,
         logout,
-        setToken,
       }}
     >
       {children}

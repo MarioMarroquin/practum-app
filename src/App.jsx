@@ -8,11 +8,11 @@ import Dashboard from "./views/dashboard";
 import Users from "./views/users";
 
 const App = () => {
-  const { isLogged, token } = useSession();
+  const { isLogged } = useSession();
 
-  // if (!isLogged) {
-  //   return <Auth />;
-  // }
+  if (!isLogged) {
+    return <Auth />;
+  }
 
   //if (!token) return <h1>Loading</h1>;
 
