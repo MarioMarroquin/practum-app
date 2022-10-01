@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./login/Login";
+import Login from "./login";
 
 const Auth = () => {
   return (
