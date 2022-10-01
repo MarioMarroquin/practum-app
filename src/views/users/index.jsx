@@ -81,11 +81,16 @@ const Users = () => {
         <DataGrid autoHeight columns={columns} rows={users} hideFooter />
       </Paper>
 
-      <CreateUser visible={createUserDialog} setVisible={setCreateUserDialog} />
+      <CreateUser
+        visible={createUserDialog}
+        setVisible={setCreateUserDialog}
+        refetch={findUsers}
+      />
       <DeleteUser
         visible={deleteUserDialog}
         setVisible={setDeleteUserDialog}
         user={selectedUser}
+        refetch={findUsers}
       />
     </>
   );
