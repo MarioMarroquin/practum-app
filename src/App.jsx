@@ -4,8 +4,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/main";
 import { useSession } from "./providers/session";
 import Auth from "./views/auth";
-import Dashboard from "./views/dashboard";
-import Users from "./views/users";
+import Dashboard from "./views/dashboard/Dashboard";
+import Users from "./views/users/Users";
 
 const App = () => {
   const { isLogged } = useSession();
