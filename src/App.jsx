@@ -1,5 +1,5 @@
 import { Backdrop, CircularProgress, CssBaseline } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/main";
 import { useSession } from "./providers/session";
