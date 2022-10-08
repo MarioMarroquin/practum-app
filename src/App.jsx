@@ -27,9 +27,8 @@ const App = () => {
     <MainLayout>
       <CssBaseline />
       <Routes>
-        <Route path='/dashboard' element={<Dashboard />}>
-          <Route path='/process' element={<Process />} />
-        </Route>
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/process' element={<Process />} />
         <Route path='/users' element={<Users />} />
         <Route path='*' element={<Navigate to='/dashboard' />} />
       </Routes>
