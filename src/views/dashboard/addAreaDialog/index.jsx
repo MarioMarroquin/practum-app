@@ -45,12 +45,12 @@ const AddAreaDialog = ({ visible, setVisible, refetch }) => {
 
   return (
     <Dialog open={visible} onClose={closeDialog}>
-      <DialogTitle>Crear grupo</DialogTitle>
+      <DialogTitle>Crear Area</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant='caption' display='block' gutterBottom>
-              Nombre de Grupo:
+              Nombre de Area:
             </Typography>
             <TextField
               id='name'

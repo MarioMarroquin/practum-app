@@ -111,10 +111,6 @@ const Dashboard = () => {
     loadProcesses();
   }, []);
 
-  useEffect(() => {
-    createTable();
-  }, [process]);
-
   const createTable = () => {
     let globalArray = [];
 
@@ -135,6 +131,10 @@ const Dashboard = () => {
     setGlobal(globalArray);
   };
 
+  useEffect(() => {
+    createTable();
+  }, [process]);
+
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 4 }}>
@@ -147,7 +147,6 @@ const Dashboard = () => {
           Agregar
         </Button>
         <Menu
-          id='basic-menu'
           anchorEl={anchorEl}
           open={open}
           onClose={() => {
@@ -158,6 +157,7 @@ const Dashboard = () => {
           }}
         >
           <MenuItem
+            key={1}
             onClick={() => {
               setAnchorEl(null);
               setAddAreaDialogShow(true);
@@ -166,6 +166,7 @@ const Dashboard = () => {
             Area
           </MenuItem>
           <MenuItem
+            key={2}
             onClick={() => {
               setAnchorEl(null);
               setAddGroupDialogShow(true);
@@ -174,6 +175,7 @@ const Dashboard = () => {
             Grupo
           </MenuItem>
           <MenuItem
+            key={3}
             onClick={() => {
               setAnchorEl(null);
               setAddProcessDialogShow(true);
@@ -203,7 +205,7 @@ const Dashboard = () => {
                 }}
               ></TableCell>
               {groups.map((g) => (
-                <Tooltip title='Editar' placement='top'>
+                <Tooltip key={g.id} title='Editar' placement='top'>
                   <TableCell
                     onClick={() => {
                       openEditGroupDialog(g);
@@ -223,7 +225,7 @@ const Dashboard = () => {
           <TableBody>
             {areas.map((a, index) => (
               <TableRow key={a.name} sx={{ "& td": { border: 0 } }}>
-                <Tooltip title='Editar' placement='top'>
+                <Tooltip key={a.id} title='Editar' placement='top'>
                   <TableCell
                     sx={{
                       position: "sticky",
@@ -244,6 +246,7 @@ const Dashboard = () => {
 
                 {global[index]?.map((ga, count) => (
                   <TableCell
+                    key={count}
                     align='center'
                     sx={{
                       background: "#F8F9F9",
@@ -252,13 +255,14 @@ const Dashboard = () => {
                     onClick={() => {
                       if (ga.length === 0) {
                         setAddProcessDialogShow(true);
-                        setActualCoor({ area: index + 1, group: count + 1 });
+                        setActualCoor({ area: a.id, group: groups[count].id });
                       }
                     }}
                   >
                     {ga.length !== 0 ? (
                       ga?.map((proc) => (
                         <div
+                          key={proc.id}
                           onClick={() => {
                             openEditProcessDialog(proc);
                           }}
@@ -319,8 +323,8 @@ const Dashboard = () => {
         visible={editProcessDialogShow}
         setVisible={setEditProcessDialogShow}
         refetch={refetch}
-        processToEdit={editProcess}
-        setProcessToEdit={setEditProcess}
+        actualProcess={editProcess}
+        setActualProcess={setEditProcess}
       />
     </>
   );

@@ -18,10 +18,10 @@ const App = () => {
       </Backdrop>
     );
   }
-
+  /* 
   if (!isLogged) {
     return <Auth />;
-  }
+  } */
 
   return (
     <MainLayout>
