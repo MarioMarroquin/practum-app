@@ -56,13 +56,7 @@ const InitialName = {
   description: "",
 };
 
-const EditProcessDialog = ({
-  visible,
-  setVisible,
-  refetch,
-  actualProcess,
-  setActualProcess,
-}) => {
+const EditProcessDialog = ({ visible, setVisible, refetch, actualProcess, setActualProcess }) => {
   const [process, setProcess] = useState(InitialProcess);
 
   const [allEntries, setAllEntries] = useState([]);
@@ -88,8 +82,16 @@ const EditProcessDialog = ({
 
   const handleChangeEntry = (event) => {
     const aux = event.target.value;
-    console.log("A", aux);
-    setProcess({ ...process, existingEntries: aux });
+
+    let results = aux.map((item) => {
+      return allEntries[item - 1] || process.existingEntries[item - 1];
+    });
+
+    let newProcess = { ...process, existingEntries: [...results] };
+
+    console.log(process.existingEntries);
+    console.log("aux", aux);
+    setProcess(newProcess);
   };
 
   const handleChangeOutput = (event) => {
@@ -278,15 +280,15 @@ const EditProcessDialog = ({
   }, [visible, actualProcess]);
 
   useEffect(() => {
-    console.log("en", allEntries);
-    console.log("ex", process.existingEntries);
+    // console.log("en", allEntries);
+    // console.log("ex", process.existingEntries);
   }, [process]);
 
   return (
     <Dialog
       open={visible}
       onClose={closeDialog}
-      maxWidth='xl'
+      maxWidth="xl"
       PaperProps={{
         style: {
           backgroundColor: "#F5F5F5",
@@ -306,20 +308,10 @@ const EditProcessDialog = ({
                 bgcolor: "white",
               }}
             >
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Nombre de Proceso:
               </Typography>
-              <TextField
-                id='name'
-                name='name'
-                type='text'
-                required
-                value={process.name}
-                onChange={handleInputChange}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="name" name="name" type="text" required value={process.name} onChange={handleInputChange} size="small" margin="dense" fullWidth />
             </Box>
           </Grid>
 
@@ -341,86 +333,51 @@ const EditProcessDialog = ({
                 }}
               >
                 <Typography fontWeight={600}>Entradas</Typography>
-                <IconButton
-                  disabled={!(newEntry.name && newEntry.description)}
-                  onClick={saveNewEntry}
-                >
+                <IconButton disabled={!(newEntry.name && newEntry.description)} onClick={saveNewEntry}>
                   <Add />
                 </IconButton>
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Nombre:
               </Typography>
-              <TextField
-                id='name'
-                name='name'
-                type='text'
-                required
-                value={newEntry.name}
-                onChange={handleInputChangeEntry}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="name" name="name" type="text" required value={newEntry.name} onChange={handleInputChangeEntry} size="small" margin="dense" fullWidth />
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Descripcion:
               </Typography>
-              <TextField
-                id='description'
-                name='description'
-                type='text'
-                required
-                value={newEntry.description}
-                onChange={handleInputChangeEntry}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="description" name="description" type="text" required value={newEntry.description} onChange={handleInputChangeEntry} size="small" margin="dense" fullWidth />
 
-              <Typography
-                variant='caption'
-                fontWeight={600}
-                color={grey[400]}
-                align='right'
-              >
+              <Typography variant="caption" fontWeight={600} color={grey[400]} align="right">
                 Entradas agregadas manualmente
               </Typography>
 
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, p: 2 }}>
                 {newEntriesArray.map((value, index) => (
-                  <Chip
-                    key={index}
-                    label={value.name}
-                    sx={{ fontWeight: 600 }}
-                  />
+                  <Chip key={index} label={value.name} sx={{ fontWeight: 600 }} />
                 ))}
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Entradas existentes:
               </Typography>
               <FormControl>
                 <Select
                   multiple
-                  value={process.existingEntries}
+                  value={process.existingEntries.map((entry) => entry.id)}
                   onChange={handleChangeEntry}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value.id} label={value.name} />
-                      ))}
+                      {selected.map((id) => {
+                        let entry = process.existingEntries.find((entry) => entry.id === id);
+                        return <Chip key={id} label={entry.name} />;
+                      })}
                     </Box>
                   )}
                   MenuProps={MenuProps}
                 >
                   {allEntries.map((e) => (
-                    <MenuItem
-                      key={e.id}
-                      value={e}
-                      style={getStyles(e.id, process.existingEntries)}
-                    >
+                    <MenuItem key={e.id} value={e.id} style={getStyles(e.id, process.existingEntries)}>
                       {e.name}
                     </MenuItem>
                   ))}
@@ -447,64 +404,32 @@ const EditProcessDialog = ({
                 }}
               >
                 <Typography fontWeight={600}>Salidas</Typography>
-                <IconButton
-                  disabled={!(newOutput.name && newOutput.description)}
-                  onClick={saveNewOutput}
-                >
+                <IconButton disabled={!(newOutput.name && newOutput.description)} onClick={saveNewOutput}>
                   <Add />
                 </IconButton>
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Nombre:
               </Typography>
-              <TextField
-                id='name'
-                name='name'
-                type='text'
-                required
-                value={newOutput.name}
-                onChange={handleInputChangeOutput}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="name" name="name" type="text" required value={newOutput.name} onChange={handleInputChangeOutput} size="small" margin="dense" fullWidth />
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Descripcion:
               </Typography>
-              <TextField
-                id='description'
-                name='description'
-                type='text'
-                required
-                value={newOutput.description}
-                onChange={handleInputChangeOutput}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="description" name="description" type="text" required value={newOutput.description} onChange={handleInputChangeOutput} size="small" margin="dense" fullWidth />
 
-              <Typography
-                variant='caption'
-                fontWeight={600}
-                color={grey[400]}
-                align='right'
-              >
+              <Typography variant="caption" fontWeight={600} color={grey[400]} align="right">
                 Salidas agregadas manualmente
               </Typography>
 
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, p: 2 }}>
                 {newOutputsArray.map((value, index) => (
-                  <Chip
-                    key={index}
-                    label={value.name}
-                    sx={{ fontWeight: 600 }}
-                  />
+                  <Chip key={index} label={value.name} sx={{ fontWeight: 600 }} />
                 ))}
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Salidas existentes:
               </Typography>
 
@@ -523,11 +448,7 @@ const EditProcessDialog = ({
                   MenuProps={MenuProps}
                 >
                   {allOutputs.map((e) => (
-                    <MenuItem
-                      key={e.id}
-                      value={e}
-                      style={getStyles(e.id, process.existingOutputs)}
-                    >
+                    <MenuItem key={e.id} value={e} style={getStyles(e.id, process.existingOutputs)}>
                       {e.name}
                     </MenuItem>
                   ))}
@@ -554,63 +475,32 @@ const EditProcessDialog = ({
                 }}
               >
                 <Typography fontWeight={600}>Herramientas</Typography>
-                <IconButton
-                  disabled={!(newTool.name && newTool.description)}
-                  onClick={saveNewTool}
-                >
+                <IconButton disabled={!(newTool.name && newTool.description)} onClick={saveNewTool}>
                   <Add />
                 </IconButton>
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Nombre:
               </Typography>
-              <TextField
-                id='name'
-                name='name'
-                type='text'
-                required
-                value={newTool.name}
-                onChange={handleInputChangeTool}
-                size='small'
-                margin='dense'
-                fullWidth
-              />
+              <TextField id="name" name="name" type="text" required value={newTool.name} onChange={handleInputChangeTool} size="small" margin="dense" fullWidth />
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Descripcion:
               </Typography>
-              <TextField
-                id='description'
-                name='description'
-                type='text'
-                required
-                value={newTool.description}
-                onChange={handleInputChangeTool}
-                size='small'
-                margin='dense'
-              />
+              <TextField id="description" name="description" type="text" required value={newTool.description} onChange={handleInputChangeTool} size="small" margin="dense" />
 
-              <Typography
-                variant='caption'
-                fontWeight={600}
-                color={grey[400]}
-                align='right'
-              >
+              <Typography variant="caption" fontWeight={600} color={grey[400]} align="right">
                 Herramientas agregadas manualmente
               </Typography>
 
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, p: 2 }}>
                 {newToolsArray.map((value, index) => (
-                  <Chip
-                    key={index}
-                    label={value.name}
-                    sx={{ fontWeight: 600 }}
-                  />
+                  <Chip key={index} label={value.name} sx={{ fontWeight: 600 }} />
                 ))}
               </Box>
 
-              <Typography variant='caption' display='block' gutterBottom>
+              <Typography variant="caption" display="block" gutterBottom>
                 Herramientas existentes:
               </Typography>
               <FormControl>
@@ -628,11 +518,7 @@ const EditProcessDialog = ({
                   MenuProps={MenuProps}
                 >
                   {allTools.map((e) => (
-                    <MenuItem
-                      key={e.id}
-                      value={e}
-                      style={getStyles(e.id, process.existingTools)}
-                    >
+                    <MenuItem key={e.id} value={e} style={getStyles(e.id, process.existingTools)}>
                       {e.name}
                     </MenuItem>
                   ))}
@@ -640,50 +526,13 @@ const EditProcessDialog = ({
               </FormControl>
             </Box>
           </Grid>
-
-          {/*  <Grid item xs={6}>
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id='demo-multiple-chip-label'>Chip</InputLabel>
-              <Select
-                labelId='demo-multiple-chip-label'
-                id='demo-multiple-chip'
-                multiple
-                value={personName}
-                onChange={handleChange}
-                input={<OutlinedInput id='select-multiple-chip' label='Chip' />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {names.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName)}
-                  >
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid> */}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color='error' variant='contained' onClick={closeDialog}>
+        <Button color="error" variant="contained" onClick={closeDialog}>
           Cancelar
         </Button>
-        <Button
-          color='success'
-          variant='contained'
-          onClick={updateProcess}
-          disabled={process.name === "" ? true : false}
-        >
+        <Button color="success" variant="contained" onClick={updateProcess} disabled={process.name === "" ? true : false}>
           Actualizar
         </Button>
       </DialogActions>
