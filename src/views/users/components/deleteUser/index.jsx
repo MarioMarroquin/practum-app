@@ -9,9 +9,10 @@ import {
 import React from "react";
 import { client } from "../../../../config/environment";
 
-const DeleteUser = ({ visible, setVisible, user }) => {
+const DeleteUser = ({ visible, setVisible, user, refetch }) => {
   const closeDialog = () => {
     setVisible(false);
+    refetch();
   };
 
   const onDelete = async () => {

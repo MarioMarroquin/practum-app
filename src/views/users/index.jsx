@@ -1,6 +1,5 @@
 import { Add, DeleteForever, Edit } from "@mui/icons-material";
 import { Box, Button, Paper } from "@mui/material";
-import { create } from "@mui/material/styles/createTransitions";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { client } from "../../config/environment";
@@ -82,11 +81,16 @@ const Users = () => {
         <DataGrid autoHeight columns={columns} rows={users} hideFooter />
       </Paper>
 
-      <CreateUser visible={createUserDialog} setVisible={setCreateUserDialog} />
+      <CreateUser
+        visible={createUserDialog}
+        setVisible={setCreateUserDialog}
+        refetch={findUsers}
+      />
       <DeleteUser
         visible={deleteUserDialog}
         setVisible={setDeleteUserDialog}
         user={selectedUser}
+        refetch={findUsers}
       />
     </>
   );

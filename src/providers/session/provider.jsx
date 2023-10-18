@@ -6,6 +6,7 @@ const sessionContext = createContext({});
 const SessionProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState();
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(false);
 
   const logoutWindow = async () => {
     setIsLogged(false);
@@ -25,10 +26,14 @@ const SessionProvider = ({ children }) => {
         const authentication = res?.data?.data?.authenticated;
         setIsLogged(authentication);
         setUser(data);
+        setLoading(false);
       });
     };
 
-    fetchSession().catch(console.error);
+    setLoading(true);
+    fetchSession().catch((err) => {
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -38,6 +43,7 @@ const SessionProvider = ({ children }) => {
         setIsLogged,
         user,
         logout,
+        loading,
       }}
     >
       {children}

@@ -18,7 +18,7 @@ const InitialUser = {
   password: "",
 };
 
-const CreateUser = ({ visible, setVisible }) => {
+const CreateUser = ({ visible, setVisible, refetch }) => {
   const [newUser, setNewUser] = useState(InitialUser);
 
   const [alert, setAlert] = useState(false);
@@ -41,6 +41,7 @@ const CreateUser = ({ visible, setVisible }) => {
 
   const closeDialog = () => {
     setVisible(false);
+    refetch();
     resetStates();
   };
 

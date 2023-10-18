@@ -1,4 +1,10 @@
-import { ChevronLeft, Dashboard, Menu, Person } from "@mui/icons-material";
+import {
+  ChevronLeft,
+  Dashboard,
+  Logout,
+  Menu,
+  Person,
+} from "@mui/icons-material";
 import {
   AppBar,
   Box,
@@ -66,9 +72,7 @@ const LeftDrawer = styled(Drawer, {
 }));
 
 const MainLayout = ({ children }) => {
-  const [selected, setSelected] = useState("Dashboard");
-  const { user, logout } = useSession();
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  const { logout } = useSession();
   const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -76,14 +80,6 @@ const MainLayout = ({ children }) => {
 
   let navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -113,8 +109,11 @@ const MainLayout = ({ children }) => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Project Management
+            Practum Process Manager
           </Typography>
+          <IconButton onClick={logout}>
+            <Logout color='secondary' />
+          </IconButton>
         </Toolbar>
       </Bar>
       <LeftDrawer variant='permanent' open={open}>
@@ -167,7 +166,7 @@ const MainLayout = ({ children }) => {
       >
         <Toolbar />
 
-        <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
           {children}
         </Container>
       </Box>
